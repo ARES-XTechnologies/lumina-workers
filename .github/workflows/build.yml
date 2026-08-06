@@ -1,0 +1,27 @@
+name: Build Lumina Workers
+on:
+  push:
+    paths: ["workers/**"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        worker: [upscale, restoreformer, ddcolor, birefnet]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: workers/${{ matrix.worker }}
+          push: true
+          tags: ghcr.io/ares-xtechnologies/lumina-${{ matrix.worker }}:latest
