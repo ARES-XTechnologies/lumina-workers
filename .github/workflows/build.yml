@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         worker: [upscale, restoreformer, ddcolor, birefnet]
+      fail-fast: false
     steps:
       - uses: actions/checkout@v4
       - uses: docker/login-action@v3
