@@ -22,7 +22,10 @@ import torch
 from PIL import Image
 
 from common import BadInput, MODELS_ROOT, decode_image, device, encode_image, free_vram
-from ddcolor_arch import DDColor
+# The reference architecture, copied out of the DDColor repo at build time.
+# Importing theirs rather than reimplementing it is deliberate — see the
+# Dockerfile for what happened the last time this file carried its own copy.
+from basicsr.archs.ddcolor_arch import DDColor
 
 WEIGHTS = f"{MODELS_ROOT}/ddcolor/pytorch_model.bin"
 
@@ -42,7 +45,7 @@ def load_model() -> DDColor:
     model = DDColor(
         encoder_name="convnext-l",
         decoder_name="MultiScaleColorDecoder",
-        input_size=(INPUT_SIZE, INPUT_SIZE),
+        input_size=[INPUT_SIZE, INPUT_SIZE],
         num_output_channels=2,
         last_norm="Spectral",
         do_normalize=False,
